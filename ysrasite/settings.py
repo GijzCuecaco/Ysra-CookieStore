@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import dj_database_url
+from urllib.parse import unquote
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +28,6 @@ SECRET_KEY = 'django-insecure-50sv_^j6a8n7tth%sm7_$vetrur4dks(ydt!@&=ikniveb44(-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-import os
 ALLOWED_HOSTS = ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', '127.0.0.1'), 'localhost']
 
 
@@ -76,14 +77,18 @@ WSGI_APPLICATION = 'ysrasite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-import dj_database_url
+database_url = os.environ.get('DATABASE_URL')
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3', # Fallback to local sqlite
-        conn_max_age=600
+   'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600,
     )
 }
 
+if database_url:
+    DATABASES['default'] = dj_database_url.parse(database_url)
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
