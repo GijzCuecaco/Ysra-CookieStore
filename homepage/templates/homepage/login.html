@@ -1,0 +1,52 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Login - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 2.5rem; color: #D4AF37; margin-bottom: 1rem;">
+                            <i class="fas fa-cookie-bite"></i>
+                        </div>
+                        <h2 style="color: #5C3317;">Welcome Back!</h2>
+                        <p style="color: #666;">Log in to continue shopping</p>
+                    </div>
+
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="form-label">Username or Email</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember" style="margin-left: 0.5rem;">Remember me</label>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                        <p style="color: #666; margin-bottom: 0;">Don't have an account?</p>
+                        <a href="{% url 'register' %}" class="btn-secondary" style="display: inline-block; margin-top: 0.5rem;">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 style="color: #5C3317; margin-bottom: 2rem;">
+            <i class="fas fa-shopping-cart"></i> Your Shopping Cart
+        </h1>
+
+        {% if cart.items.all %}
+            <div class="cart-section">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart.items.all %}
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div class="cart-item-image">
+                                            {% if item.product.image %}
+                                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                            {% else %}
+                                                <i class="fas fa-cookie-bite" style="font-size: 2rem; color: #8B4513;"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <h5 style="margin: 0; color: #5C3317;">{{ item.product.name }}</h5>
+                                            <small style="color: #666;">{{ item.product.category.name }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="color: #D4AF37; font-weight: bold;">${{ item.product.price }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'update_cart' item.id %}" style="display: flex; gap: 0.5rem;">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" style="width: 60px; padding: 5px;">
+                                        <button type="submit" class="btn btn-sm" style="background: #8B4513; color: white; border: none; padding: 5px 10px;">Update</button>
+                                    </form>
+                                </td>
+                                <td style="color: #D4AF37; font-weight: bold;">${{ item.get_total }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-danger">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <a href="{% url 'shop' %}" class="btn-secondary" style="display: inline-block;">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="cart-summary">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span>${{ cart.get_total }}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span>Free</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Tax:</span>
+                                <span>Calculated at checkout</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span>${{ cart.get_total }}</span>
+                            </div>
+                            <a href="{% url 'checkout' %}" class="btn-primary" style="display: block; text-align: center; width: 100%; padding: 12px; margin-top: 1rem; text-decoration: none;">
+                                <i class="fas fa-credit-card"></i> Proceed to Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <div style="font-size: 4rem; color: #D4AF37; margin-bottom: 1rem;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>Your cart is empty</h3>
+                <p>Start adding some delicious cookies to your cart!</p>
+                <a href="{% url 'shop' %}" class="btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

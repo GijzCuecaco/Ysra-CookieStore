@@ -1,0 +1,130 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 style="color: #5C3317; margin-bottom: 2rem;">
+            <i class="fas fa-credit-card"></i> Checkout
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="checkout-section">
+                    <form method="POST" action="{% url 'checkout' %}">
+                        {% csrf_token %}
+
+                        <div class="card" style="border: none; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <h5 style="color: #8B4513; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                                <i class="fas fa-user"></i> Shipping Information
+                            </h5>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name *</label>
+                                    <input type="text" name="full_name" class="form-control" required value="{{ user.get_full_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" name="email" class="form-control" required value="{{ user.email }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" name="phone" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Address *</label>
+                                <input type="text" name="address" class="form-control" required placeholder="Street address">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">City *</label>
+                                    <input type="text" name="city" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Postal Code *</label>
+                                    <input type="text" name="postal_code" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Country *</label>
+                                <input type="text" name="country" class="form-control" required value="United States">
+                            </div>
+                        </div>
+
+                        <div class="card" style="border: none; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <h5 style="color: #8B4513; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                                <i class="fas fa-box"></i> Order Summary
+                            </h5>
+
+                            {% for item in cart.items.all %}
+                                <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #eee;">
+                                    <div>
+                                        <strong>{{ item.product.name }}</strong>
+                                        <br>
+                                        <small style="color: #666;">Qty: {{ item.quantity }}</small>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <strong>${{ item.get_total }}</strong>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div style="padding: 1rem 0; display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; color: #D4AF37;">
+                                <span>Total:</span>
+                                <span>${{ cart.get_total }}</span>
+                            </div>
+                        </div>
+
+                        <div style="padding: 1.5rem; background: #F5E6D3; border-radius: 10px; margin-bottom: 2rem;">
+                            <input type="checkbox" id="agree" required>
+                            <label for="agree" style="margin-left: 0.5rem;">
+                                I agree to the terms and conditions and privacy policy
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-credit-card"></i> Place Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div style="background: var(--white); border-radius: 15px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 100px;">
+                    <h5 style="color: #8B4513; margin-bottom: 1rem;">
+                        <i class="fas fa-receipt"></i> Order Details
+                    </h5>
+
+                    {% for item in cart.items.all %}
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <small>{{ item.product.name }} x {{ item.quantity }}</small>
+                            <small style="color: #D4AF37; font-weight: bold;">${{ item.get_total }}</small>
+                        </div>
+                    {% endfor %}
+
+                    <div style="border-top: 2px solid #eee; margin-top: 1rem; padding-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <strong>Subtotal</strong>
+                            <strong>${{ cart.get_total }}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <strong>Shipping</strong>
+                            <strong>Free</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 1.2rem; color: #D4AF37;">
+                            <strong>Total</strong>
+                            <strong>${{ cart.get_total }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

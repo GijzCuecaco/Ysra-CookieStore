@@ -1,0 +1,99 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Edit Product - Sweet Cookies Admin{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 style="color: #5C3317; margin-bottom: 2rem;">
+            <i class="fas fa-edit"></i> Edit Product: {{ product.name }}
+        </h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="cart-section">
+                        <h5 style="color: #8B4513; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            Product Information
+                        </h5>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Name *</label>
+                            <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select name="category" class="form-control" required>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea name="description" class="form-control" rows="5" required>{{ product.description }}</textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Price (USD) *</label>
+                                <input type="number" name="price" class="form-control" step="0.01" value="{{ product.price }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Stock Quantity *</label>
+                                <input type="number" name="stock" class="form-control" min="0" value="{{ product.stock }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Cookie Shape *</label>
+                                <select name="shape" class="form-control" required>
+                                    <option value="round" {% if product.shape == 'round' %}selected{% endif %}>Round</option>
+                                    <option value="square" {% if product.shape == 'square' %}selected{% endif %}>Square</option>
+                                    <option value="heart" {% if product.shape == 'heart' %}selected{% endif %}>Heart</option>
+                                    <option value="custom" {% if product.shape == 'custom' %}selected{% endif %}>Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" name="is_featured" {% if product.is_featured %}checked{% endif %}> Featured Product
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Key Ingredients *</label>
+                            <textarea name="ingredients" class="form-control" rows="3" required>{{ product.ingredients }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Allergens</label>
+                            <textarea name="allergens" class="form-control" rows="2">{{ product.allergens }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Image</label>
+                            {% if product.image %}
+                                <div style="margin-bottom: 1rem;">
+                                    <img src="{{ product.image.url }}" style="max-width: 200px; border-radius: 10px;">
+                                </div>
+                            {% endif %}
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a href="{% url 'admin_products' %}" class="btn-secondary" style="display: inline-block; margin-left: 0.5rem;">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

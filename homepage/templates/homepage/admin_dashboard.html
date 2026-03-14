@@ -1,0 +1,113 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="admin-header">
+            <h1><i class="fas fa-chart-line"></i> Admin Dashboard</h1>
+            <p>Manage your e-commerce store</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ total_products }}</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ total_orders }}</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${{ total_revenue }}</div>
+                <div class="stat-label">Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ pending_orders }}</div>
+                <div class="stat-label">Pending Orders</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'admin_products' %}" class="btn-secondary" style="display: block; padding: 1rem; text-align: center; border-radius: 10px; text-decoration: none;">
+                    <i class="fas fa-box" style="font-size: 1.5rem;"></i><br>
+                    Manage Products
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'add_product' %}" class="btn-primary" style="display: block; padding: 1rem; text-align: center; border-radius: 10px; text-decoration: none;">
+                    <i class="fas fa-plus-circle" style="font-size: 1.5rem;"></i><br>
+                    Add Product
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="{% url 'admin_orders' %}" class="btn-secondary" style="display: block; padding: 1rem; text-align: center; border-radius: 10px; text-decoration: none;">
+                    <i class="fas fa-receipt" style="font-size: 1.5rem;"></i><br>
+                    View Orders
+                </a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="/admin/" class="btn-secondary" style="display: block; padding: 1rem; text-align: center; border-radius: 10px; text-decoration: none;">
+                    <i class="fas fa-cog" style="font-size: 1.5rem;"></i><br>
+                    Django Admin
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="cart-section">
+            <h4 style="color: #8B4513; margin-bottom: 1.5rem;">
+                <i class="fas fa-history"></i> Recent Orders
+            </h4>
+
+            {% if recent_orders %}
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                            <tr>
+                                <td style="font-weight: bold;">{{ order.order_number }}</td>
+                                <td>{{ order.user.username }}</td>
+                                <td style="color: #D4AF37; font-weight: bold;">${{ order.total }}</td>
+                                <td>
+                                    {% if order.status == 'pending' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; background: #FFC107; color: #856404;">Pending</span>
+                                    {% elif order.status == 'processing' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; background: #17A2B8; color: white;">Processing</span>
+                                    {% elif order.status == 'shipped' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; background: #007BFF; color: white;">Shipped</span>
+                                    {% elif order.status == 'delivered' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; background: #28A745; color: white;">Delivered</span>
+                                    {% else %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; background: #DC3545; color: white;">{{ order.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'admin_orders' %}" class="btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="color: #666; text-align: center;">No orders yet</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

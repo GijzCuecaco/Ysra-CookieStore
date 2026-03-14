@@ -1,0 +1,44 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Delete Product - Sweet Cookies Admin{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 3rem; color: #DC3545; margin-bottom: 1rem;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 style="color: #5C3317;">Delete Product?</h2>
+                        <p style="color: #666;">This action cannot be undone</p>
+                    </div>
+
+                    <div style="background: #F5E6D3; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+                        <h5 style="color: #8B4513; margin-bottom: 1rem;">
+                            <i class="fas fa-box"></i> {{ product.name }}
+                        </h5>
+                        <p style="color: #666; margin: 0;">
+                            <strong>Price:</strong> ${{ product.price }}<br>
+                            <strong>Stock:</strong> {{ product.stock }}<br>
+                            <strong>Category:</strong> {{ product.category.name }}
+                        </p>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger" style="width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-trash"></i> Yes, Delete This Product
+                        </button>
+                    </form>
+
+                    <a href="{% url 'admin_products' %}" class="btn-secondary" style="display: block; width: 100%; padding: 12px; text-align: center; text-decoration: none;">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

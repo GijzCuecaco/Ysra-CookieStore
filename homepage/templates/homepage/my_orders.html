@@ -1,0 +1,71 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}My Orders - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 style="color: #5C3317; margin-bottom: 2rem;">
+            <i class="fas fa-receipt"></i> My Orders
+        </h1>
+
+        {% if orders %}
+            <div class="cart-section">
+                {% for order in orders %}
+                    <div style="background: #F5E6D3; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #D4AF37;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <small style="color: #666;">Order Number</small>
+                                <p style="margin: 0; font-weight: bold; color: #5C3317;">{{ order.order_number }}</p>
+                            </div>
+                            <div>
+                                <small style="color: #666;">Date</small>
+                                <p style="margin: 0; font-weight: bold; color: #5C3317;">{{ order.created_at|date:"M d, Y" }}</p>
+                            </div>
+                            <div>
+                                <small style="color: #666;">Total</small>
+                                <p style="margin: 0; font-weight: bold; color: #D4AF37;">${{ order.total }}</p>
+                            </div>
+                            <div>
+                                <small style="color: #666;">Status</small>
+                                <p style="margin: 0; font-weight: bold;">
+                                    {% if order.status == 'pending' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #FFC107; color: #856404;">Pending</span>
+                                    {% elif order.status == 'processing' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #17A2B8; color: white;">Processing</span>
+                                    {% elif order.status == 'shipped' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #007BFF; color: white;">Shipped</span>
+                                    {% elif order.status == 'delivered' %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #28A745; color: white;">Delivered</span>
+                                    {% else %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #DC3545; color: white;">{{ order.get_status_display }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid #D4AF37; padding-top: 1rem;">
+                            <h6 style="color: #8B4513; margin-bottom: 0.5rem;">Items Ordered:</h6>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: #666;">
+                                {% for item in order.items.all %}
+                                    <li>{{ item.product_name }} × {{ item.quantity }} - ${{ item.get_total }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <div style="font-size: 3rem; color: #D4AF37; margin-bottom: 1rem;">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3>No Orders Yet</h3>
+                <p>You haven't placed any orders yet. Start shopping now!</p>
+                <a href="{% url 'shop' %}" class="btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

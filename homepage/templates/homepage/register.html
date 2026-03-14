@@ -1,0 +1,64 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Register - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 2.5rem; color: #D4AF37; margin-bottom: 1rem;">
+                            <i class="fas fa-cookie-bite"></i>
+                        </div>
+                        <h2 style="color: #5C3317;">Join Sweet Cookies!</h2>
+                        <p style="color: #666;">Create an account to start shopping</p>
+                    </div>
+
+                    <form method="POST" action="{% url 'register' %}">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" name="password_confirm" class="form-control" required>
+                        </div>
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <input type="checkbox" id="agree" name="agree" required>
+                            <label for="agree" style="margin-left: 0.5rem;">
+                                I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                        <p style="color: #666; margin-bottom: 0;">Already have an account?</p>
+                        <a href="{% url 'login' %}" class="btn-secondary" style="display: inline-block; margin-top: 0.5rem;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

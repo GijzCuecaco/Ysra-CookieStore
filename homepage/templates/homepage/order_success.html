@@ -1,0 +1,74 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Order Confirmed - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="success-message">
+                <h2>Order Placed Successfully!</h2>
+                <p>Thank you for your purchase. Your cookies will be prepared with love and shipped soon.</p>
+            </div>
+
+            <div style="background: #F5E6D3; border-radius: 10px; padding: 2rem; margin: 2rem 0; text-align: left;">
+                <h5 style="color: #8B4513; margin-bottom: 1rem;">Order Details</h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <p style="color: #666; font-size: 0.9rem;">Order Number</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; color: #5C3317;">{{ order.order_number }}</p>
+                    </div>
+                    <div>
+                        <p style="color: #666; font-size: 0.9rem;">Order Date</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; color: #5C3317;">{{ order.created_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div>
+                        <p style="color: #666; font-size: 0.9rem;">Total Amount</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; color: #D4AF37;">${{ order.total }}</p>
+                    </div>
+                    <div>
+                        <p style="color: #666; font-size: 0.9rem;">Status</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; text-transform: capitalize; color: #FFC107;">{{ order.status }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #FFF8E7; border-left: 4px solid #D4AF37; border-radius: 5px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h5 style="color: #8B4513; margin-bottom: 0.5rem;">
+                    <i class="fas fa-info-circle"></i> What's Next?
+                </h5>
+                <ul style="color: #666; margin: 0; padding-left: 1.5rem;">
+                    <li>We'll prepare your cookies with premium ingredients</li>
+                    <li>Your order will be shipped within 1-2 business days</li>
+                    <li>You'll receive a tracking number via email</li>
+                    <li>Cookies will arrive fresh within 3-5 business days</li>
+                </ul>
+            </div>
+
+            <div style="background: #F5E6D3; border-radius: 10px; padding: 2rem; margin-bottom: 2rem;">
+                <h5 style="color: #8B4513; margin-bottom: 1rem;">Shipping Address</h5>
+                <p style="margin: 0; line-height: 1.8;">
+                    <strong>{{ order.full_name }}</strong><br>
+                    {{ order.address }}<br>
+                    {{ order.city }}, {{ order.postal_code }}<br>
+                    {{ order.country }}<br>
+                    <br>
+                    <i class="fas fa-envelope"></i> {{ order.email }}<br>
+                    <i class="fas fa-phone"></i> {{ order.phone }}
+                </p>
+            </div>
+
+            <div>
+                <a href="{% url 'my_orders' %}" class="btn-secondary" style="display: inline-block; margin-right: 1rem;">
+                    <i class="fas fa-list"></i> View My Orders
+                </a>
+                <a href="{% url 'shop' %}" class="btn-primary" style="display: inline-block;">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

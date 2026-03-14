@@ -1,0 +1,92 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Add Product - Sweet Cookies Admin{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 style="color: #5C3317; margin-bottom: 2rem;">
+            <i class="fas fa-plus-circle"></i> Add New Product
+        </h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="cart-section">
+                        <h5 style="color: #8B4513; border-bottom: 2px solid #D4AF37; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            Product Information
+                        </h5>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Name *</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select name="category" class="form-control" required>
+                                <option value="">Select a category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea name="description" class="form-control" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Price (USD) *</label>
+                                <input type="number" name="price" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Stock Quantity *</label>
+                                <input type="number" name="stock" class="form-control" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Cookie Shape *</label>
+                                <select name="shape" class="form-control" required>
+                                    <option value="round">Round</option>
+                                    <option value="square">Square</option>
+                                    <option value="heart">Heart</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" name="is_featured"> Featured Product
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Key Ingredients *</label>
+                            <textarea name="ingredients" class="form-control" rows="3" placeholder="e.g., Butter, Chocolate, Vanilla, Eggs" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Allergens</label>
+                            <textarea name="allergens" class="form-control" rows="2" placeholder="e.g., Contains peanuts, dairy"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-save"></i> Add Product
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

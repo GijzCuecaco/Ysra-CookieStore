@@ -1,0 +1,189 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ product.name }} - Sweet Cookies{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <nav aria-label="breadcrumb" style="margin-bottom: 2rem;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}">Shop</a></li>
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="product-detail-section">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="product-detail-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div style="font-size: 5rem; color: #8B4513;">
+                                <i class="fas fa-cookie-bite"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <small style="color: #8B4513; text-transform: uppercase; font-weight: bold;">
+                        {{ product.category.name }}
+                    </small>
+
+                    <h1 class="product-detail-info" style="margin-top: 0.5rem;">{{ product.name }}</h1>
+
+                    <div class="product-detail-price">${{ product.price }}</div>
+
+                    <div class="product-detail-rating" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span style="color: #666; margin-left: 0.5rem;">(4.5 out of 5 - 124 reviews)</span>
+                    </div>
+
+                    <div style="padding: 1.5rem; background: #F5E6D3; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <div class="product-detail-description">
+                            <h5 style="color: #8B4513;">Description</h5>
+                            {{ product.description }}
+                        </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h5 style="color: #8B4513; margin-bottom: 0.5rem;">Cookie Shape</h5>
+                        <p style="text-transform: capitalize;">{{ product.shape }}</p>
+                    </div>
+
+                    <!-- Ingredients -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h5 style="color: #8B4513; margin-bottom: 0.5rem;">Key Ingredients</h5>
+                        <div>
+                            {% for ingredient in product.ingredients|split:"," %}
+                                <span class="ingredient-badge">{{ ingredient|strip }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Allergens -->
+                    {% if product.allergens %}
+                        <div style="padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px; margin-bottom: 1.5rem;">
+                            <h5 style="color: #856404; margin: 0;">
+                                <i class="fas fa-exclamation-triangle"></i> Allergen Information
+                            </h5>
+                            <p style="color: #856404; margin: 0.5rem 0 0 0;">{{ product.allergens }}</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Stock Status -->
+                    <div style="margin-bottom: 1.5rem;">
+                        {% if product.is_in_stock %}
+                            <p style="color: #28a745; font-weight: bold;">
+                                <i class="fas fa-check-circle"></i> In Stock ({{ product.stock }} available)
+                            </p>
+                        {% else %}
+                            <p style="color: #dc3545; font-weight: bold;">
+                                <i class="fas fa-times-circle"></i> Out of Stock
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Add to Cart -->
+                    {% if user.is_authenticated %}
+                        <form method="POST" action="{% url 'add_to_cart' product.pk %}">
+                            {% csrf_token %}
+                            <div class="quantity-selector">
+                                <label style="font-weight: bold;">Quantity:</label>
+                                <button type="button" class="quantity-btn" onclick="decreaseQuantity()">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" name="quantity" id="quantity" class="quantity-input" value="1" min="1" max="{{ product.stock }}">
+                                <button type="button" class="quantity-btn" onclick="increaseQuantity()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            {% if product.is_in_stock %}
+                                <button type="submit" class="add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            {% else %}
+                                <button type="button" class="add-to-cart-btn" disabled style="opacity: 0.5;">
+                                    Out of Stock
+                                </button>
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <a href="{% url 'login' %}?next={% url 'product_detail' product.pk %}">Please log in</a> to add items to your cart
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        {% if related_products %}
+            <div style="margin-top: 4rem;">
+                <div class="section-title">
+                    <h2>Related Cookies</h2>
+                    <p>You might also like these</p>
+                </div>
+
+                <div class="product-grid">
+                    {% for related_product in related_products %}
+                        <div class="product-card">
+                            <div class="product-image">
+                                {% if related_product.image %}
+                                    <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
+                                {% else %}
+                                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #8B4513;">
+                                        <i class="fas fa-cookie-bite"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="product-content">
+                                <small class="product-category">{{ related_product.category.name }}</small>
+                                <h3 class="product-name">{{ related_product.name }}</h3>
+                                <p class="product-description">{{ related_product.description|truncatewords:15 }}</p>
+                                <div class="product-info">
+                                    <span class="product-price">${{ related_product.price }}</span>
+                                    <span class="stock-status {% if not related_product.is_in_stock %}out-of-stock{% endif %}">
+                                        {% if related_product.is_in_stock %}In Stock{% else %}Out of Stock{% endif %}
+                                    </span>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="{% url 'product_detail' related_product.pk %}" class="btn-secondary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            const max = input.getAttribute('max');
+            if (parseInt(input.value) < parseInt(max)) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+    </script>
+{% endblock %}

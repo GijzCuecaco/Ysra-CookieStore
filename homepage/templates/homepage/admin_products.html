@@ -1,0 +1,89 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+{% block title %}Manage Products - Sweet Cookies Admin{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="color: #5C3317; margin: 0;">
+                <i class="fas fa-box"></i> Manage Products
+            </h1>
+            <a href="{% url 'add_product' %}" class="btn-primary">
+                <i class="fas fa-plus-circle"></i> Add New Product
+            </a>
+        </div>
+
+        {% if products %}
+            <div class="cart-section">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Featured</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;">
+                                        {% else %}
+                                            <div style="width: 50px; height: 50px; background: #F5E6D3; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-cookie-bite" style="color: #8B4513;"></i>
+                                            </div>
+                                        {% endif %}
+                                        <strong>{{ product.name }}</strong>
+                                    </div>
+                                </td>
+                                <td>{{ product.category.name }}</td>
+                                <td style="color: #D4AF37; font-weight: bold;">${{ product.price }}</td>
+                                <td>
+                                    {% if product.stock > 0 %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #d4edda; color: #155724;">{{ product.stock }}</span>
+                                    {% else %}
+                                        <span style="padding: 5px 10px; border-radius: 5px; background: #f8d7da; color: #721c24;">{{ product.stock }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if product.is_featured %}
+                                        <span style="color: #D4AF37;">
+                                            <i class="fas fa-star"></i> Yes
+                                        </span>
+                                    {% else %}
+                                        <span style="color: #666;">No</span>
+                                    {% endif %}
+                                </td>
+                                <td style="font-size: 0.9rem;">{{ product.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'edit_product' product.pk %}" class="btn-secondary" style="padding: 5px 10px; font-size: 0.85rem; display: inline-block; margin-right: 5px;">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_product' product.pk %}" class="btn-danger" style="padding: 5px 10px; font-size: 0.85rem;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" style="text-align: center; padding: 3rem;">
+                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <h4>No Products</h4>
+                <p>Start by adding your first product</p>
+                <a href="{% url 'add_product' %}" class="btn-primary" style="margin-top: 1rem;">
+                    <i class="fas fa-plus-circle"></i> Add Product
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
