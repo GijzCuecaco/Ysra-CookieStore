@@ -77,18 +77,20 @@ WSGI_APPLICATION = 'ysrasite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-database_url = os.environ.get('DATABASE_URL')
+db_from_env = os.environ.get('DATABASE_URL')
 
-DATABASES = {
-   'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600,
-    )
-}
-
-if database_url:
-    DATABASES['default'] = dj_database_url.parse(database_url)
+if db_from_env:
+    print(f"Database URL found starting with: {db_from_env[:10]}")
+    DATABASES = {
+        'default': dj_database_url.parse(db_from_env)
+    }
+    # Supabase requires SSL
     DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+else:
+    print("DATABASE_URL not found! Falling back to SQLite.")
+    DATABASES = {
+        'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
